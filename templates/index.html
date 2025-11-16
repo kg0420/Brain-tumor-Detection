@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🧠 Brain Tumor Classifier</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: radial-gradient(circle at top, #0f172a, #000); color: #eef2ff; }
+    .card { background: rgba(255,255,255,0.06); backdrop-filter: blur(8px); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4">
+
+  <header class="w-full max-w-5xl mt-6 mb-4 text-center">
+    <h1 class="text-3xl md:text-4xl font-bold text-cyan-300">Brain Tumor Detection</h1>
+    <p class="text-slate-300 mt-2">Upload an MRI (JPG/PNG). The model will predict and show a Grad-CAM heatmap.</p>
+  </header>
+
+  <main class="w-full max-w-5xl grid md:grid-cols-2 gap-6">
+    <!-- Upload Card -->
+    <section class="card rounded-2xl p-5">
+      <form method="POST" enctype="multipart/form-data" class="space-y-4">
+        <label class="block text-sm text-slate-200">Select MRI image</label>
+        <input name="image" type="file" accept="image/*"
+               class="w-full p-2 rounded bg-slate-800 border border-cyan-600 focus:outline-none">
+
+        <button type="submit"
+                class="w-full mt-3 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-semibold transition">
+          Predict
+        </button>
+      </form>
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="mt-4 space-y-2">
+            {% for m in messages %}
+              <div class="text-sm text-red-300">{{ m }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+    </section>
+
+    <!-- Result Card -->
+    <section class="card rounded-2xl p-5">
+      {% if pred_label %}
+        <div class="space-y-3">
+          <div class="text-lg">
+            <span class="text-slate-300">Prediction:</span>
+            <span class="font-bold text-white">{{ pred_label|title }}</span>
+          </div>
+          <div class="text-lg">
+            <span class="text-slate-300">Confidence:</span>
+            <span class="font-bold text-white">{{ pred_conf }}%</span>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-4 mt-4">
+            <figure>
+              <figcaption class="text-sm text-slate-300 mb-1">Uploaded Image</figcaption>
+              <img src="{{ uploaded_url }}" alt="Uploaded MRI" class="rounded-lg w-full object-contain border border-slate-700">
+            </figure>
+
+            <figure>
+              <figcaption class="text-sm text-slate-300 mb-1">Grad-CAM Heatmap</figcaption>
+              <img src="{{ cam_url }}" alt="Grad-CAM" class="rounded-lg w-full object-contain border border-slate-700">
+            </figure>
+          </div>
+        </div>
+      {% else %}
+        <p class="text-slate-300">No prediction yet. Upload an image to begin.</p>
+      {% endif %}
+    </section>
+  </main>
+
+  <footer class="mt-10 text-xs text-slate-400">
+    @Developer Krish Gupta
+  </footer>
+</body>
+</html>

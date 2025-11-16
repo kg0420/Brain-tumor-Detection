@@ -1,0 +1,18 @@
+# --- Web Framework ---
+Flask
+Werkzeug
+
+# --- Deep Learning ---
+tensorflow
+keras
+
+# --- Image Processing ---
+opencv-python
+Pillow
+numpy
+
+# --- For Grad-CAM Visualization ---
+matplotlib
+
+# --- Deployment (optional but recommended) ---
+gunicorn
